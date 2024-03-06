@@ -167,8 +167,9 @@ type Cookie struct {
 
 // ServersLoadBalancer holds the ServersLoadBalancer configuration.
 type ServersLoadBalancer struct {
-	Sticky  *Sticky  `json:"sticky,omitempty" toml:"sticky,omitempty" yaml:"sticky,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
-	Servers []Server `json:"servers,omitempty" toml:"servers,omitempty" yaml:"servers,omitempty" label-slice-as-struct:"server" export:"true"`
+	Sticky   *Sticky  `json:"sticky,omitempty" toml:"sticky,omitempty" yaml:"sticky,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
+	Servers  []Server `json:"servers,omitempty" toml:"servers,omitempty" yaml:"servers,omitempty" label-slice-as-struct:"server" export:"true"`
+	Strategy string   `json:"strategy,omitempty" toml:"strategy,omitempty" yaml:"strategy,omitempty" export:"true"`
 	// HealthCheck enables regular active checks of the responsiveness of the
 	// children servers of this load-balancer. To propagate status changes (e.g. all
 	// servers of this service are down) upwards, HealthCheck must also be enabled on
@@ -226,10 +227,11 @@ func (r *ResponseForwarding) SetDefaults() {
 
 // Server holds the server configuration.
 type Server struct {
-	URL    string `json:"url,omitempty" toml:"url,omitempty" yaml:"url,omitempty" label:"-"`
-	Weight *int   `json:"weight,omitempty" toml:"weight,omitempty" yaml:"weight,omitempty" label:"weight"`
-	Scheme string `json:"-" toml:"-" yaml:"-" file:"-"`
-	Port   string `json:"-" toml:"-" yaml:"-" file:"-"`
+	URL                 string  `json:"url,omitempty" toml:"url,omitempty" yaml:"url,omitempty" label:"-"`
+	Weight              *int    `json:"weight,omitempty" toml:"weight,omitempty" yaml:"weight,omitempty" label:"weight"`
+	LoadBalanceStrategy *string `json:"loadBalanceStrategy,omitempty" toml:"loadBalanceStrategy,omitempty" yaml:"loadBalanceStrategy,omitempty" label:"loadBalanceStrategy"`
+	Scheme              string  `json:"-" toml:"-" yaml:"-" file:"-"`
+	Port                string  `json:"-" toml:"-" yaml:"-" file:"-"`
 }
 
 // SetDefaults Default values for a Server.

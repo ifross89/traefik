@@ -27,9 +27,9 @@ import (
 	"github.com/traefik/traefik/v3/pkg/server/cookie"
 	"github.com/traefik/traefik/v3/pkg/server/middleware"
 	"github.com/traefik/traefik/v3/pkg/server/provider"
+	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer"
 	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/failover"
 	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/mirror"
-	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/wrr"
 )
 
 const defaultMaxBodySize int64 = -1
@@ -220,7 +220,12 @@ func (m *Manager) getWRRServiceHandler(ctx context.Context, serviceName string, 
 		config.Sticky.Cookie.Name = cookie.GetName(config.Sticky.Cookie.Name, serviceName)
 	}
 
-	balancer := wrr.New(config.Sticky, config.HealthCheck != nil)
+	strategy, err := loadbalancer.StrategyFromName(loadbalancer.StrategyNameWeightedRoundRobin)
+	if err != nil {
+		return nil, fmt.Errorf("could not create strategy: %v", err)
+	}
+
+	balancer := loadbalancer.New(config.Sticky, config.HealthCheck != nil, strategy)
 	for _, service := range shuffle(config.Services, m.rand) {
 		serviceHandler, err := m.BuildHTTP(ctx, service.Name)
 		if err != nil {
@@ -283,7 +288,12 @@ func (m *Manager) getLoadBalancerServiceHandler(ctx context.Context, serviceName
 		return nil, err
 	}
 
-	lb := wrr.New(service.Sticky, service.HealthCheck != nil)
+	strategy, err := loadbalancer.StrategyFromName(service.Strategy)
+	if err != nil {
+		return nil, fmt.Errorf("could not create strategy: %v", err)
+	}
+
+	lb := loadbalancer.New(service.Sticky, service.HealthCheck != nil, strategy)
 	healthCheckTargets := make(map[string]*url.URL)
 
 	for _, server := range shuffle(service.Servers, m.rand) {

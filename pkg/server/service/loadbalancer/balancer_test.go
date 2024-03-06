@@ -1,4 +1,4 @@
-package wrr
+package loadbalancer
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 )
 
 func TestBalancer(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := New(nil, false, newStrategyWRR())
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -33,7 +33,7 @@ func TestBalancer(t *testing.T) {
 }
 
 func TestBalancerNoService(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := New(nil, false, newStrategyWRR())
 
 	recorder := httptest.NewRecorder()
 	balancer.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
@@ -42,7 +42,7 @@ func TestBalancerNoService(t *testing.T) {
 }
 
 func TestBalancerOneServerZeroWeight(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := New(nil, false, newStrategyWRR())
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -64,7 +64,7 @@ type key string
 const serviceName key = "serviceName"
 
 func TestBalancerNoServiceUp(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := New(nil, false, newStrategyWRR())
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -84,7 +84,7 @@ func TestBalancerNoServiceUp(t *testing.T) {
 }
 
 func TestBalancerOneServerDown(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := New(nil, false, newStrategyWRR())
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -105,7 +105,7 @@ func TestBalancerOneServerDown(t *testing.T) {
 }
 
 func TestBalancerDownThenUp(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := New(nil, false, newStrategyWRR())
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -134,7 +134,7 @@ func TestBalancerDownThenUp(t *testing.T) {
 }
 
 func TestBalancerPropagate(t *testing.T) {
-	balancer1 := New(nil, true)
+	balancer1 := New(nil, true, newStrategyWRR())
 
 	balancer1.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -145,7 +145,7 @@ func TestBalancerPropagate(t *testing.T) {
 		rw.WriteHeader(http.StatusOK)
 	}), Int(1))
 
-	balancer2 := New(nil, true)
+	balancer2 := New(nil, true, newStrategyWRR())
 	balancer2.Add("third", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "third")
 		rw.WriteHeader(http.StatusOK)
@@ -155,7 +155,7 @@ func TestBalancerPropagate(t *testing.T) {
 		rw.WriteHeader(http.StatusOK)
 	}), Int(1))
 
-	topBalancer := New(nil, true)
+	topBalancer := New(nil, true, newStrategyWRR())
 	topBalancer.Add("balancer1", balancer1, Int(1))
 	_ = balancer1.RegisterStatusUpdater(func(up bool) {
 		topBalancer.SetStatus(context.WithValue(context.Background(), serviceName, "top"), "balancer1", up)
@@ -207,7 +207,7 @@ func TestBalancerPropagate(t *testing.T) {
 }
 
 func TestBalancerAllServersZeroWeight(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := New(nil, false, newStrategyWRR())
 
 	balancer.Add("test", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {}), Int(0))
 	balancer.Add("test2", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {}), Int(0))
@@ -227,7 +227,7 @@ func TestSticky(t *testing.T) {
 			SameSite: "none",
 			MaxAge:   42,
 		},
-	}, false)
+	}, false, newStrategyWRR())
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -268,7 +268,7 @@ func TestSticky(t *testing.T) {
 func TestSticky_FallBack(t *testing.T) {
 	balancer := New(&dynamic.Sticky{
 		Cookie: &dynamic.Cookie{Name: "test"},
-	}, false)
+	}, false, newStrategyWRR())
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -297,7 +297,7 @@ func TestSticky_FallBack(t *testing.T) {
 // TestBalancerBias makes sure that the WRR algorithm spreads elements evenly right from the start,
 // and that it does not "over-favor" the high-weighted ones with a biased start-up regime.
 func TestBalancerBias(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := New(nil, false, newStrategyWRR())
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "A")
