@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"sync/atomic"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -30,6 +31,33 @@ func TestBalancer(t *testing.T) {
 
 	assert.Equal(t, 3, recorder.save["first"])
 	assert.Equal(t, 1, recorder.save["second"])
+}
+
+func TestBalancer_TwoRandomChoices(t *testing.T) {
+	rnd := &mockRand{vals: []int{0, 1, 1, 0, 0, 1, 1, 0}}
+
+	strategy := newStrategyTRC()
+	strategy.(*strategyTwoRandomChoices).rand = rnd
+
+	balancer := New(nil, false, strategy)
+
+	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("server", "first")
+		rw.WriteHeader(http.StatusOK)
+	}), nil)
+
+	balancer.Add("second", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("server", "second")
+		rw.WriteHeader(http.StatusOK)
+	}), nil)
+
+	recorder := &responseRecorder{ResponseRecorder: httptest.NewRecorder(), save: map[string]int{}}
+	for i := 0; i < 4; i++ {
+		balancer.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
+	}
+
+	assert.Equal(t, 2, recorder.save["first"])
+	assert.Equal(t, 2, recorder.save["second"])
 }
 
 func TestBalancerNoService(t *testing.T) {
@@ -318,6 +346,34 @@ func TestBalancerBias(t *testing.T) {
 	wantSequence := []string{"A", "A", "A", "B", "A", "A", "A", "A", "B", "A", "A", "A", "B", "A"}
 
 	assert.Equal(t, wantSequence, recorder.sequence)
+}
+
+// TestBalancerIncrementsInflightCounter makes sure during a request, the inflight counter is
+// incremented and decremented properly.
+func TestBalancerIncrementsInflightCounter(t *testing.T) {
+	balancer := New(nil, false, newStrategyTRC())
+
+	var inflight *atomic.Int64
+
+	var (
+		before, during, after int64
+	)
+
+	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		during = inflight.Load()
+		rw.WriteHeader(http.StatusOK)
+	}), nil)
+
+	inflight = &balancer.handlerMap["first"].inflight
+
+	before = inflight.Load()
+	recorder := &responseRecorder{ResponseRecorder: httptest.NewRecorder(), save: map[string]int{}}
+	balancer.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
+	after = inflight.Load()
+
+	assert.Zerof(t, before, "before: %d", before)
+	assert.Zerof(t, after, "after: %d", after)
+	assert.Equalf(t, int64(1), during, "during: %d", during)
 }
 
 func Int(v int) *int { return &v }
