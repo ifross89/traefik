@@ -288,7 +288,12 @@ func (m *Manager) getLoadBalancerServiceHandler(ctx context.Context, serviceName
 		return nil, err
 	}
 
-	strategy, err := loadbalancer.StrategyFromName(service.Strategy)
+	strategyName := loadbalancer.StrategyNameWeightedRoundRobin
+	if service.Strategy != "" {
+		strategyName = service.Strategy
+	}
+
+	strategy, err := loadbalancer.StrategyFromName(strategyName)
 	if err != nil {
 		return nil, fmt.Errorf("could not create strategy: %v", err)
 	}

@@ -300,7 +300,9 @@ func (c configBuilder) buildMirroring(ctx context.Context, tService *traefikv1al
 func toServiceStrategy(strategy string) (string, error) {
 
 	switch strategy {
-	case "", strategyRoundRobin, strategyWeightedRoundRobin:
+	case "":
+		return "", nil
+	case strategyRoundRobin, strategyWeightedRoundRobin:
 		return loadbalancer.StrategyNameWeightedRoundRobin, nil
 	case strategyNameTwoRandomChoices:
 		return loadbalancer.StrategyNameTwoRandomChoices, nil
