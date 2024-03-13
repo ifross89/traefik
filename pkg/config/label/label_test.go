@@ -188,6 +188,7 @@ func TestDecodeConfiguration(t *testing.T) {
 		"traefik.http.services.Service1.loadbalancer.sticky":                           "false",
 		"traefik.http.services.Service1.loadbalancer.sticky.cookie.name":               "fui",
 		"traefik.http.services.Service1.loadbalancer.serversTransport":                 "foobar",
+		"traefik.http.services.Service1.loadbalancer.strategy":                         "p2c",
 
 		"traefik.tcp.middlewares.Middleware0.ipallowlist.sourcerange":      "foobar, fiibar",
 		"traefik.tcp.middlewares.Middleware2.inflightconn.amount":          "42",
@@ -717,7 +718,7 @@ func TestDecodeConfiguration(t *testing.T) {
 							FlushInterval: ptypes.Duration(time.Second),
 						},
 						ServersTransport: "foobar",
-						Strategy:         types.BalancingStrategyWRR,
+						Strategy:         types.BalancingStrategyP2C,
 					},
 				},
 			},
@@ -1186,6 +1187,7 @@ func TestEncodeConfiguration(t *testing.T) {
 							FlushInterval: ptypes.Duration(time.Second),
 						},
 						ServersTransport: "foobar",
+						Strategy:         types.BalancingStrategyWRR,
 					},
 				},
 				"Service1": {
@@ -1215,6 +1217,7 @@ func TestEncodeConfiguration(t *testing.T) {
 							FlushInterval: ptypes.Duration(time.Second),
 						},
 						ServersTransport: "foobar",
+						Strategy:         types.BalancingStrategyP2C,
 					},
 				},
 			},
@@ -1379,6 +1382,7 @@ func TestEncodeConfiguration(t *testing.T) {
 		"traefik.HTTP.Services.Service0.LoadBalancer.Sticky.Cookie.Secure":             "false",
 		"traefik.HTTP.Services.Service0.LoadBalancer.Sticky.Cookie.MaxAge":             "0",
 		"traefik.HTTP.Services.Service0.LoadBalancer.ServersTransport":                 "foobar",
+		"traefik.HTTP.Services.Service0.LoadBalancer.Strategy":                         "wrr",
 		"traefik.HTTP.Services.Service1.LoadBalancer.HealthCheck.Headers.name0":        "foobar",
 		"traefik.HTTP.Services.Service1.LoadBalancer.HealthCheck.Headers.name1":        "foobar",
 		"traefik.HTTP.Services.Service1.LoadBalancer.HealthCheck.Hostname":             "foobar",
@@ -1394,6 +1398,7 @@ func TestEncodeConfiguration(t *testing.T) {
 		"traefik.HTTP.Services.Service1.LoadBalancer.server.Port":                      "8080",
 		"traefik.HTTP.Services.Service1.LoadBalancer.server.Scheme":                    "foobar",
 		"traefik.HTTP.Services.Service1.LoadBalancer.ServersTransport":                 "foobar",
+		"traefik.HTTP.Services.Service1.LoadBalancer.Strategy":                         "p2c",
 
 		"traefik.TCP.Middlewares.Middleware0.IPAllowList.SourceRange": "foobar, fiibar",
 		"traefik.TCP.Middlewares.Middleware2.InFlightConn.Amount":     "42",
