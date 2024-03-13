@@ -2,7 +2,6 @@ package label
 
 import (
 	"fmt"
-	"github.com/traefik/traefik/v3/pkg/types"
 	"testing"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/traefik/paerser/types"
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
+	"github.com/traefik/traefik/v3/pkg/types"
 )
 
 func Bool(v bool) *bool       { return &v }
