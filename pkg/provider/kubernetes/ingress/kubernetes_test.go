@@ -140,7 +140,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 									},
 								},
 								ServersTransport: "foobar@file",
-								Strategy:         types.BalancingStrategyWRR,
+								Strategy:         types.BalancingStrategyP2C,
 							},
 						},
 					},

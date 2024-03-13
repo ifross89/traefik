@@ -1,6 +1,7 @@
 package ingress
 
 import (
+	"github.com/traefik/traefik/v3/pkg/types"
 	"regexp"
 	"strings"
 
@@ -47,11 +48,13 @@ type ServiceIng struct {
 	Sticky           *dynamic.Sticky `json:"sticky,omitempty" label:"allowEmpty"`
 	NativeLB         bool            `json:"nativeLB,omitempty"`
 	NodePortLB       bool            `json:"nodePortLB,omitempty"`
+	Strategy         string          `json:"strategy,omitempty"`
 }
 
 // SetDefaults sets the default values.
 func (s *ServiceIng) SetDefaults() {
 	s.PassHostHeader = func(v bool) *bool { return &v }(true)
+	s.Strategy = types.BalancingStrategyWRR
 }
 
 func parseRouterConfig(annotations map[string]string) (*RouterConfig, error) {

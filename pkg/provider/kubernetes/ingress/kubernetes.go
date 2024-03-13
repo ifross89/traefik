@@ -585,6 +585,10 @@ func (p *Provider) loadService(client Client, namespace string, backend netv1.In
 			svc.LoadBalancer.ServersTransport = svcConfig.Service.ServersTransport
 		}
 
+		if svcConfig.Service.Strategy != "" {
+			svc.LoadBalancer.Strategy = svcConfig.Service.Strategy
+		}
+
 		if svcConfig.Service.NativeLB {
 			address, err := getNativeServiceAddress(*service, portSpec)
 			if err != nil {
