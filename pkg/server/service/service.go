@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/traefik/traefik/v3/pkg/types"
 	"hash/fnv"
 	"math/rand"
 	"net/http"
@@ -220,12 +221,7 @@ func (m *Manager) getWRRServiceHandler(ctx context.Context, serviceName string, 
 		config.Sticky.Cookie.Name = cookie.GetName(config.Sticky.Cookie.Name, serviceName)
 	}
 
-	strategy, err := loadbalancer.StrategyFromName(loadbalancer.StrategyNameWeightedRoundRobin)
-	if err != nil {
-		return nil, fmt.Errorf("could not create strategy: %v", err)
-	}
-
-	balancer := loadbalancer.New(config.Sticky, config.HealthCheck != nil, strategy)
+	balancer := loadbalancer.NewWRR(config.Sticky, config.HealthCheck != nil)
 	for _, service := range shuffle(config.Services, m.rand) {
 		serviceHandler, err := m.BuildHTTP(ctx, service.Name)
 		if err != nil {
@@ -288,17 +284,21 @@ func (m *Manager) getLoadBalancerServiceHandler(ctx context.Context, serviceName
 		return nil, err
 	}
 
-	strategyName := loadbalancer.StrategyNameWeightedRoundRobin
-	if service.Strategy != "" {
-		strategyName = service.Strategy
+	// TODO(ian): do we need this if we have the default set in the dynamic package?
+	if service.Strategy == "" {
+		service.Strategy = types.BalancingStrategyWRR
 	}
 
-	strategy, err := loadbalancer.StrategyFromName(strategyName)
-	if err != nil {
-		return nil, fmt.Errorf("could not create strategy: %v", err)
+	if !types.ValidBalancingStrategy(service.Strategy) {
+		return nil, fmt.Errorf("invalid balancing strategy: %s", service.Strategy)
 	}
 
-	lb := loadbalancer.New(service.Sticky, service.HealthCheck != nil, strategy)
+	newBalancer := loadbalancer.NewWRR
+	if service.Strategy == types.BalancingStrategyP2C {
+		newBalancer = loadbalancer.NewP2C
+	}
+
+	lb := newBalancer(service.Sticky, service.HealthCheck != nil)
 	healthCheckTargets := make(map[string]*url.URL)
 
 	for _, server := range shuffle(service.Servers, m.rand) {

@@ -59,15 +59,15 @@ func TestStrategyTwoRandomChoices_AllHealthy(t *testing.T) {
 		{
 			name:          "choosesLowerOfThree",
 			handlers:      testHandlers(10, 90, 40),
-			rand:          &mockRand{vals: []int{1, 2}},
+			rand:          &mockRand{vals: []int{1, 1}},
 			expectHandler: "2",
 		},
 	}
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			strategy := newStrategyTRC()
-			strategy.(*strategyTwoRandomChoices).rand = tc.rand
+			strategy := newStrategyP2C()
+			strategy.(*strategyPowerOfTwoChoices).rand = tc.rand
 
 			status := map[string]struct{}{}
 			for _, h := range tc.handlers {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/traefik/traefik/v3/pkg/types"
 	"net"
 	"strconv"
 	"strings"
@@ -13,7 +14,6 @@ import (
 	"github.com/traefik/traefik/v3/pkg/logs"
 	"github.com/traefik/traefik/v3/pkg/provider"
 	traefikv1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
-	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer"
 	"github.com/traefik/traefik/v3/pkg/tls"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -298,14 +298,13 @@ func (c configBuilder) buildMirroring(ctx context.Context, tService *traefikv1al
 }
 
 func toServiceStrategy(strategy string) (string, error) {
-
 	switch strategy {
 	case "":
 		return "", nil
 	case strategyRoundRobin, strategyWeightedRoundRobin:
-		return loadbalancer.StrategyNameWeightedRoundRobin, nil
+		return types.BalancingStrategyWRR, nil
 	case strategyNameTwoRandomChoices:
-		return loadbalancer.StrategyNameTwoRandomChoices, nil
+		return types.BalancingStrategyP2C, nil
 
 	default:
 		return "", fmt.Errorf("load balancing strategy %s is not supported", strategy)

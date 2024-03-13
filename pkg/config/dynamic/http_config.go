@@ -20,6 +20,9 @@ const (
 
 	// DefaultFlushInterval is the default value for the ResponseForwarding flush interval.
 	DefaultFlushInterval = ptypes.Duration(100 * time.Millisecond)
+
+	// DefaultBalancingStrategy is the default value for the ServersLoadBalancer strategy.
+	DefaultBalancingStrategy = types.BalancingStrategyWRR
 )
 
 // +k8s:deepcopy-gen=true
@@ -199,6 +202,8 @@ func (l *ServersLoadBalancer) Mergeable(loadBalancer *ServersLoadBalancer) bool 
 
 // SetDefaults Default values for a ServersLoadBalancer.
 func (l *ServersLoadBalancer) SetDefaults() {
+	l.Strategy = DefaultBalancingStrategy
+
 	defaultPassHostHeader := DefaultPassHostHeader
 	l.PassHostHeader = &defaultPassHostHeader
 

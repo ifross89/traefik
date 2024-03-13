@@ -15,7 +15,7 @@ type strategyWRR struct {
 	deadline    float64
 }
 
-func newStrategyWRR() Strategy {
+func newStrategyWRR() strategy {
 	return &strategyWRR{}
 }
 
@@ -43,8 +43,10 @@ func (s *strategyWRR) add(h *namedHandler) {
 	heap.Push(s, h)
 }
 
+func (s *strategyWRR) setUp(string, bool) {}
+
 func (s *strategyWRR) name() string {
-	return StrategyNameWeightedRoundRobin
+	return "wrr"
 }
 
 func (s *strategyWRR) len() int {

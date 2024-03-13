@@ -2,6 +2,7 @@ package label
 
 import (
 	"fmt"
+	"github.com/traefik/traefik/v3/pkg/types"
 	"testing"
 	"time"
 
@@ -684,6 +685,7 @@ func TestDecodeConfiguration(t *testing.T) {
 							FlushInterval: ptypes.Duration(time.Second),
 						},
 						ServersTransport: "foobar",
+						Strategy:         types.BalancingStrategyWRR,
 					},
 				},
 				"Service1": {
@@ -715,6 +717,7 @@ func TestDecodeConfiguration(t *testing.T) {
 							FlushInterval: ptypes.Duration(time.Second),
 						},
 						ServersTransport: "foobar",
+						Strategy:         types.BalancingStrategyWRR,
 					},
 				},
 			},

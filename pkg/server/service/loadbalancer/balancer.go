@@ -3,7 +3,6 @@ package loadbalancer
 import (
 	"context"
 	"errors"
-	"fmt"
 	"hash/fnv"
 	"net/http"
 	"strconv"
@@ -49,32 +48,16 @@ func convertSameSite(sameSite string) http.SameSite {
 	}
 }
 
-type Strategy interface {
+type strategy interface {
 	// nextServer returns the next server to serve a request, this is called under the handlersMu lock.
 	nextServer(status map[string]struct{}) *namedHandler
 	// add adds a handler to the balancing algorithm, this is called under the handlersMu lock.
 	add(h *namedHandler)
 
+	setUp(name string, up bool)
+
 	name() string
 	len() int
-}
-
-const (
-	StrategyNameWeightedRoundRobin = "WeightedRoundRobin"
-	StrategyNameTwoRandomChoices   = "TwoRandomChoices"
-)
-
-var newStrategy = map[string]func() Strategy{
-	StrategyNameWeightedRoundRobin: newStrategyWRR,
-	StrategyNameTwoRandomChoices:   newStrategyTRC,
-}
-
-// StrategyFromName returns a load balancing strategy
-func StrategyFromName(name string) (Strategy, error) {
-	if strat, ok := newStrategy[name]; ok {
-		return strat(), nil
-	}
-	return nil, fmt.Errorf("loadbalancer: unknown balancing strategy name %q", name)
 }
 
 // Balancer implements an HTTP load balancer that can use different strategies to
@@ -95,18 +78,25 @@ type Balancer struct {
 
 	// strategy references the load balancing strategy to be used. The add and
 	// nextServer method must be called under the handlersMu lock
-	strategy Strategy
+	strategy strategy
 
 	// updaters is the list of hooks that are run (to update the Balancer
 	// parent(s)), whenever the Balancer status changes.
 	updaters []func(bool)
 }
 
-// New creates a new load balancer.
-func New(sticky *dynamic.Sticky, wantHealthCheck bool, strategy Strategy) *Balancer {
-	if strategy == nil {
-		strategy = newStrategyWRR()
-	}
+// NewWRR creates a new wiegihted round-robin balancer.
+func NewWRR(sticky *dynamic.Sticky, wantHealthCheck bool) *Balancer {
+	return newBalancer(sticky, wantHealthCheck, newStrategyWRR())
+}
+
+// NewP2C creates a new power of two random choices balancer.
+func NewP2C(sticky *dynamic.Sticky, wantHealthCheck bool) *Balancer {
+	return newBalancer(sticky, wantHealthCheck, newStrategyP2C())
+}
+
+func newBalancer(sticky *dynamic.Sticky, wantHealthCheck bool, strategy strategy) *Balancer {
+
 	balancer := &Balancer{
 		status:           make(map[string]struct{}),
 		handlerMap:       make(map[string]*namedHandler),
@@ -147,6 +137,7 @@ func (b *Balancer) SetStatus(ctx context.Context, childName string, up bool) {
 	} else {
 		delete(b.status, childName)
 	}
+	b.strategy.setUp(childName, up)
 
 	upAfter := len(b.status) > 0
 	status = "DOWN"
