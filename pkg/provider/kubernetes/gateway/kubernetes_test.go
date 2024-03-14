@@ -580,6 +580,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -677,6 +678,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -738,6 +740,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -807,6 +810,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -867,6 +871,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -927,6 +932,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1003,6 +1009,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"default-whoami2-8080": {
@@ -1019,6 +1026,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1083,6 +1091,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"default-whoami2-8080": {
@@ -1099,6 +1108,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1181,6 +1191,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1272,6 +1283,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1357,6 +1369,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1417,6 +1430,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1493,6 +1507,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"bar-whoami-bar-80": {
@@ -1509,6 +1524,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1569,6 +1585,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1638,6 +1655,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1706,6 +1724,7 @@ func TestLoadHTTPRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -3868,6 +3887,7 @@ func TestLoadMixedRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -4052,6 +4072,7 @@ func TestLoadMixedRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -4266,6 +4287,7 @@ func TestLoadMixedRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"bar-whoami-bar-80": {
@@ -4282,6 +4304,7 @@ func TestLoadMixedRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"bar-http-app-bar-my-gateway-web-a431b128267aabc954fd-wrr": {
@@ -4438,6 +4461,7 @@ func TestLoadMixedRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"bar-http-app-bar-my-gateway-web-a431b128267aabc954fd-wrr": {
@@ -4594,6 +4618,7 @@ func TestLoadMixedRoutes(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},

@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/traefik/traefik/v3/pkg/types"
 	"hash/fnv"
 	"math/rand"
 	"net/http"
@@ -27,9 +28,9 @@ import (
 	"github.com/traefik/traefik/v3/pkg/server/cookie"
 	"github.com/traefik/traefik/v3/pkg/server/middleware"
 	"github.com/traefik/traefik/v3/pkg/server/provider"
+	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer"
 	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/failover"
 	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/mirror"
-	"github.com/traefik/traefik/v3/pkg/server/service/loadbalancer/wrr"
 )
 
 const defaultMaxBodySize int64 = -1
@@ -220,7 +221,7 @@ func (m *Manager) getWRRServiceHandler(ctx context.Context, serviceName string, 
 		config.Sticky.Cookie.Name = cookie.GetName(config.Sticky.Cookie.Name, serviceName)
 	}
 
-	balancer := wrr.New(config.Sticky, config.HealthCheck != nil)
+	balancer := loadbalancer.NewWRR(config.Sticky, config.HealthCheck != nil)
 	for _, service := range shuffle(config.Services, m.rand) {
 		serviceHandler, err := m.BuildHTTP(ctx, service.Name)
 		if err != nil {
@@ -283,7 +284,21 @@ func (m *Manager) getLoadBalancerServiceHandler(ctx context.Context, serviceName
 		return nil, err
 	}
 
-	lb := wrr.New(service.Sticky, service.HealthCheck != nil)
+	// TODO(ian): do we need this if we have the default set in the dynamic package?
+	if service.Strategy == "" {
+		service.Strategy = types.BalancingStrategyWRR
+	}
+
+	if !types.ValidBalancingStrategy(service.Strategy) {
+		return nil, fmt.Errorf("invalid balancing strategy: %s", service.Strategy)
+	}
+
+	newBalancer := loadbalancer.NewWRR
+	if service.Strategy == types.BalancingStrategyP2C {
+		newBalancer = loadbalancer.NewP2C
+	}
+
+	lb := newBalancer(service.Sticky, service.HealthCheck != nil)
 	healthCheckTargets := make(map[string]*url.URL)
 
 	for _, server := range shuffle(service.Servers, m.rand) {

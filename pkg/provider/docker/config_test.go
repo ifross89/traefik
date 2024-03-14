@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/traefik/paerser/types"
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
+	"github.com/traefik/traefik/v3/pkg/types"
 )
 
 func TestDynConfBuilder_DefaultRule(t *testing.T) {
@@ -75,6 +76,7 @@ func TestDynConfBuilder_DefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -135,6 +137,7 @@ func TestDynConfBuilder_DefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -197,6 +200,7 @@ func TestDynConfBuilder_DefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -251,6 +255,7 @@ func TestDynConfBuilder_DefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -305,6 +310,7 @@ func TestDynConfBuilder_DefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -365,6 +371,7 @@ func TestDynConfBuilder_DefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -588,6 +595,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -668,6 +676,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"Test2": {
@@ -681,6 +690,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -761,6 +771,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -822,6 +833,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -884,6 +896,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -938,6 +951,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1005,6 +1019,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1062,6 +1077,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"Service2": {
@@ -1075,6 +1091,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1136,6 +1153,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1373,6 +1391,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1433,6 +1452,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1530,6 +1550,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1614,6 +1635,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1720,6 +1742,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1798,6 +1821,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1898,6 +1922,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1981,6 +2006,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2054,6 +2080,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"Test2": {
@@ -2067,6 +2094,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2128,6 +2156,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2190,6 +2219,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2246,6 +2276,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"Service2": {
@@ -2259,6 +2290,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2448,6 +2480,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2695,6 +2728,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2767,6 +2801,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -3220,6 +3255,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -3392,6 +3428,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},

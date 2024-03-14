@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/traefik/traefik/v3/pkg/types"
 	"net"
 	"strconv"
 	"strings"
@@ -19,9 +20,12 @@ import (
 )
 
 const (
-	roundRobinStrategy = "RoundRobin"
-	httpsProtocol      = "https"
-	httpProtocol       = "http"
+	strategyRoundRobin           = "RoundRobin"
+	strategyWeightedRoundRobin   = "WeightedRoundRobin"
+	strategyNameTwoRandomChoices = "TwoRandomChoices"
+
+	httpsProtocol = "https"
+	httpProtocol  = "http"
 )
 
 func (p *Provider) loadIngressRouteConfiguration(ctx context.Context, client Client, tlsConfigs map[string]*tls.CertAndStores) *dynamic.HTTPConfiguration {
@@ -293,8 +297,27 @@ func (c configBuilder) buildMirroring(ctx context.Context, tService *traefikv1al
 	return nil
 }
 
+func toServiceStrategy(strategy string) (string, error) {
+	switch strategy {
+	case "":
+		return "", nil
+	case strategyRoundRobin, strategyWeightedRoundRobin:
+		return types.BalancingStrategyWRR, nil
+	case strategyNameTwoRandomChoices:
+		return types.BalancingStrategyP2C, nil
+
+	default:
+		return "", fmt.Errorf("load balancing strategy %s is not supported", strategy)
+	}
+}
+
 // buildServersLB creates the configuration for the load-balancer of servers defined by svc.
 func (c configBuilder) buildServersLB(namespace string, svc traefikv1alpha1.LoadBalancerSpec) (*dynamic.Service, error) {
+	strategy, err := toServiceStrategy(svc.Strategy)
+	if err != nil {
+		return nil, err
+	}
+
 	servers, err := c.loadServers(namespace, svc)
 	if err != nil {
 		return nil, err
@@ -303,6 +326,7 @@ func (c configBuilder) buildServersLB(namespace string, svc traefikv1alpha1.Load
 	lb := &dynamic.ServersLoadBalancer{}
 	lb.SetDefaults()
 	lb.Servers = servers
+	lb.Strategy = strategy
 
 	conf := svc
 	lb.PassHostHeader = conf.PassHostHeader
@@ -348,13 +372,6 @@ func (c *configBuilder) makeServersTransportKey(parentNamespace string, serversT
 }
 
 func (c configBuilder) loadServers(parentNamespace string, svc traefikv1alpha1.LoadBalancerSpec) ([]dynamic.Server, error) {
-	strategy := svc.Strategy
-	if strategy == "" {
-		strategy = roundRobinStrategy
-	}
-	if strategy != roundRobinStrategy {
-		return nil, fmt.Errorf("load balancing strategy %s is not supported", strategy)
-	}
 
 	namespace := namespaceOrFallback(svc, parentNamespace)
 

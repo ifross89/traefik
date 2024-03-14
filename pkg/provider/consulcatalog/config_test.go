@@ -71,6 +71,7 @@ func TestDefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -126,6 +127,7 @@ func TestDefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -173,6 +175,7 @@ func TestDefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -220,6 +223,7 @@ func TestDefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -273,6 +277,7 @@ func TestDefaultRule(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -363,6 +368,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -422,6 +428,7 @@ func Test_buildConfiguration(t *testing.T) {
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
 								ServersTransport: "tls-ns-dc1-dev-Test",
+								Strategy:         types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -513,6 +520,7 @@ func Test_buildConfiguration(t *testing.T) {
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
 								ServersTransport: "tls-ns-dc1-dev-Test",
+								Strategy:         types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -594,6 +602,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"Test2": {
@@ -607,6 +616,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -671,6 +681,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -732,6 +743,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -796,6 +808,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -849,6 +862,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -903,6 +917,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -949,6 +964,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1008,6 +1024,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1057,6 +1074,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"Service2": {
@@ -1070,6 +1088,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1243,6 +1262,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1295,6 +1315,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1373,6 +1394,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1438,6 +1460,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1519,6 +1542,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1580,6 +1604,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1655,6 +1680,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1722,6 +1748,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1775,6 +1802,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1829,6 +1857,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -1877,6 +1906,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 						"Service2": {
@@ -1890,6 +1920,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2105,6 +2136,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2169,6 +2201,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2584,6 +2617,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2672,6 +2706,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
+								Strategy: types.BalancingStrategyWRR,
 							},
 						},
 					},
@@ -2879,6 +2914,7 @@ func Test_buildConfiguration(t *testing.T) {
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
 								ServersTransport: "tls-ns-dc1-Test",
+								Strategy:         types.BalancingStrategyWRR,
 							},
 						},
 						"Test-97077516270503695": {
@@ -2893,6 +2929,7 @@ func Test_buildConfiguration(t *testing.T) {
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),
 								},
 								ServersTransport: "tls-ns-dc1-Test",
+								Strategy:         types.BalancingStrategyWRR,
 							},
 						},
 					},

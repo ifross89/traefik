@@ -1,9 +1,10 @@
-package wrr
+package loadbalancer
 
 import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"sync/atomic"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,7 +12,7 @@ import (
 )
 
 func TestBalancer(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := NewWRR(nil, false)
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -32,8 +33,31 @@ func TestBalancer(t *testing.T) {
 	assert.Equal(t, 1, recorder.save["second"])
 }
 
+func TestBalancer_TwoRandomChoices(t *testing.T) {
+	balancer := NewP2C(nil, false)
+	balancer.strategy.(*strategyPowerOfTwoChoices).rand = &mockRand{vals: []int{0, 1, 1, 0, 0, 1, 1, 0}}
+
+	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("server", "first")
+		rw.WriteHeader(http.StatusOK)
+	}), nil)
+
+	balancer.Add("second", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("server", "second")
+		rw.WriteHeader(http.StatusOK)
+	}), nil)
+
+	recorder := &responseRecorder{ResponseRecorder: httptest.NewRecorder(), save: map[string]int{}}
+	for i := 0; i < 4; i++ {
+		balancer.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
+	}
+
+	assert.Equal(t, 2, recorder.save["first"])
+	assert.Equal(t, 2, recorder.save["second"])
+}
+
 func TestBalancerNoService(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := NewWRR(nil, false)
 
 	recorder := httptest.NewRecorder()
 	balancer.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
@@ -42,7 +66,7 @@ func TestBalancerNoService(t *testing.T) {
 }
 
 func TestBalancerOneServerZeroWeight(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := NewWRR(nil, false)
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -64,7 +88,7 @@ type key string
 const serviceName key = "serviceName"
 
 func TestBalancerNoServiceUp(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := NewWRR(nil, false)
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -84,7 +108,7 @@ func TestBalancerNoServiceUp(t *testing.T) {
 }
 
 func TestBalancerOneServerDown(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := NewWRR(nil, false)
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -105,7 +129,7 @@ func TestBalancerOneServerDown(t *testing.T) {
 }
 
 func TestBalancerDownThenUp(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := NewWRR(nil, false)
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -134,7 +158,7 @@ func TestBalancerDownThenUp(t *testing.T) {
 }
 
 func TestBalancerPropagate(t *testing.T) {
-	balancer1 := New(nil, true)
+	balancer1 := NewWRR(nil, true)
 
 	balancer1.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "first")
@@ -145,7 +169,7 @@ func TestBalancerPropagate(t *testing.T) {
 		rw.WriteHeader(http.StatusOK)
 	}), Int(1))
 
-	balancer2 := New(nil, true)
+	balancer2 := NewWRR(nil, true)
 	balancer2.Add("third", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "third")
 		rw.WriteHeader(http.StatusOK)
@@ -155,7 +179,7 @@ func TestBalancerPropagate(t *testing.T) {
 		rw.WriteHeader(http.StatusOK)
 	}), Int(1))
 
-	topBalancer := New(nil, true)
+	topBalancer := NewWRR(nil, true)
 	topBalancer.Add("balancer1", balancer1, Int(1))
 	_ = balancer1.RegisterStatusUpdater(func(up bool) {
 		topBalancer.SetStatus(context.WithValue(context.Background(), serviceName, "top"), "balancer1", up)
@@ -207,7 +231,7 @@ func TestBalancerPropagate(t *testing.T) {
 }
 
 func TestBalancerAllServersZeroWeight(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := NewWRR(nil, false)
 
 	balancer.Add("test", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {}), Int(0))
 	balancer.Add("test2", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {}), Int(0))
@@ -219,7 +243,7 @@ func TestBalancerAllServersZeroWeight(t *testing.T) {
 }
 
 func TestSticky(t *testing.T) {
-	balancer := New(&dynamic.Sticky{
+	balancer := NewWRR(&dynamic.Sticky{
 		Cookie: &dynamic.Cookie{
 			Name:     "test",
 			Secure:   true,
@@ -266,7 +290,7 @@ func TestSticky(t *testing.T) {
 }
 
 func TestSticky_FallBack(t *testing.T) {
-	balancer := New(&dynamic.Sticky{
+	balancer := NewWRR(&dynamic.Sticky{
 		Cookie: &dynamic.Cookie{Name: "test"},
 	}, false)
 
@@ -297,7 +321,7 @@ func TestSticky_FallBack(t *testing.T) {
 // TestBalancerBias makes sure that the WRR algorithm spreads elements evenly right from the start,
 // and that it does not "over-favor" the high-weighted ones with a biased start-up regime.
 func TestBalancerBias(t *testing.T) {
-	balancer := New(nil, false)
+	balancer := NewWRR(nil, false)
 
 	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("server", "A")
@@ -318,6 +342,34 @@ func TestBalancerBias(t *testing.T) {
 	wantSequence := []string{"A", "A", "A", "B", "A", "A", "A", "A", "B", "A", "A", "A", "B", "A"}
 
 	assert.Equal(t, wantSequence, recorder.sequence)
+}
+
+// TestBalancerIncrementsInflightCounter makes sure during a request, the inflight counter is
+// incremented and decremented properly.
+func TestBalancerIncrementsInflightCounter(t *testing.T) {
+	balancer := NewP2C(nil, false)
+
+	var inflight *atomic.Int64
+
+	var (
+		before, during, after int64
+	)
+
+	balancer.Add("first", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		during = inflight.Load()
+		rw.WriteHeader(http.StatusOK)
+	}), nil)
+
+	inflight = &balancer.handlerMap["first"].inflight
+
+	before = inflight.Load()
+	recorder := &responseRecorder{ResponseRecorder: httptest.NewRecorder(), save: map[string]int{}}
+	balancer.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/", nil))
+	after = inflight.Load()
+
+	assert.Zerof(t, before, "before: %d", before)
+	assert.Zerof(t, after, "after: %d", after)
+	assert.Equalf(t, int64(1), during, "during: %d", during)
 }
 
 func Int(v int) *int { return &v }

@@ -664,6 +664,7 @@ func Test_buildConfiguration(t *testing.T) {
 						ResponseForwarding: &dynamic.ResponseForwarding{
 							FlushInterval: ptypes.Duration(time.Second),
 						},
+						Strategy: types.BalancingStrategyWRR,
 					},
 				},
 				"Service02": {
